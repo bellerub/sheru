@@ -1,0 +1,8 @@
+ Django==2.2.7
+ psycopg2-binary
+ requests
+ daphne
+ django-crispy-forms
+ django-npm
+ channels
+ docker

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'xterm/dist/xterm.css' %}" />
+<script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+<script src="{% static 'xterm/dist/xterm.js' %}"></script>
+<script src="{% static 'xterm/dist/addons/fit/fit.js' %}"></script>
+<script src="{% static 'xterm/dist/addons/webLinks/webLinks.js' %}"></script>
+<script src="{% static 'xterm/dist/addons/fullscreen/fullscreen.js' %}"></script>
+<script src="{% static 'xterm/dist/addons/search/search.js' %}"></script>
+<script src="{% static 'xterm/dist/addons/attach/attach.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<div id="terminal-container">
+</div>
+
+<!--
+<div id="terminal"></div>
+
+<script>
+  var term = new Terminal();
+  term.open(document.getElementById('terminal'));
+  term.write('Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ')
+</script>-->
+
+
+<script type="text/javascript">
+  document.getElementById("submitBtn").addEventListener("click", startTerm);
+  function startTerm(){
+      //var containerID = document.getElementById('containerIdInput1').value;
+      var term_websocket;
+      Terminal.applyAddon(fullscreen)
+      Terminal.applyAddon(fit)
+      Terminal.applyAddon(attach);
+      const term = new Terminal({
+          cursorBlink: true,
+          windowsMode:true,
+          scrollback: true,
+          //rows:10
+      });
+  
+      if (typeof(term_websocket) != "undefined"){
+          term_websocket.close();
+      }
+      const container = document.getElementById('terminal-container');
+      term.open(container);
+      term.fit()
+      //console.log(`size: ${term.cols} columns, ${term.rows} rows`)
+      const protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
+      const port = location.port ? `:${location.port}` : '';
+      const socketUrl = `${protocol}${location.hostname}${port}/ws/{{ user_id }}`;
+      term_websocket = new WebSocket(socketUrl);
+      term_websocket.onopen = (ev) => { term.attach(term_websocket); };
+      term_websocket.onclose = function(ev){
+          console.log('Connection closed.');
+      };                   
+  };
+  </script>
+
+{% endblock %}

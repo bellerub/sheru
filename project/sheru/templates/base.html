@@ -1,0 +1,22 @@
+{% load static %}
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" />
+        
+        <title>Sheru</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% block extra_head %}
+        {% endblock %}
+    </head>
+    <body class="bg-dark text-white">
+        <nav class="navbar navbar-light bg-secondary w-100 no-gutters">
+            <a class="navbar-brand" href="/">Sheru</a>
+        </nav>
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+</html>

@@ -1,0 +1,12 @@
+{
+    "name": "sheru",
+    "version": "1.0.0",
+    "description": "",
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "bootstrap": "^4.4.0",
+      "jquery": "^3.4.1",
+      "xterm": "^3.14.5"
+    }
+  }
