@@ -97,6 +97,8 @@ else:
         }
     }
 
+# Update User References
+AUTH_USER_MODEL = 'sheru.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
