@@ -13,10 +13,10 @@
 {% endblock %}
 
 {% block content %}
-
+<div class="h-100">
 <div id="terminal-container">
 </div>
-
+</div>
 <!--
 <div id="terminal"></div>
 
@@ -28,36 +28,37 @@
 
 
 <script type="text/javascript">
-  document.getElementById("submitBtn").addEventListener("click", startTerm);
-  function startTerm(){
+  $(document).ready(function(){
       //var containerID = document.getElementById('containerIdInput1').value;
       var term_websocket;
+      
+      Terminal.applyAddon(attach);
       Terminal.applyAddon(fullscreen)
       Terminal.applyAddon(fit)
-      Terminal.applyAddon(attach);
       const term = new Terminal({
           cursorBlink: true,
           windowsMode:true,
           scrollback: true,
           //rows:10
       });
-  
       if (typeof(term_websocket) != "undefined"){
           term_websocket.close();
       }
       const container = document.getElementById('terminal-container');
       term.open(container);
+      term.focus();
+      term.toggleFullScreen(true);
       term.fit()
       //console.log(`size: ${term.cols} columns, ${term.rows} rows`)
       const protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
       const port = location.port ? `:${location.port}` : '';
-      const socketUrl = `${protocol}${location.hostname}${port}/ws/{{ user_id }}`;
+      const socketUrl = `${protocol}${location.hostname}${port}/ws/{{ user.pk }}`;
       term_websocket = new WebSocket(socketUrl);
       term_websocket.onopen = (ev) => { term.attach(term_websocket); };
       term_websocket.onclose = function(ev){
           console.log('Connection closed.');
       };                   
-  };
+  });
   </script>
 
 {% endblock %}

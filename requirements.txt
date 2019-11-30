@@ -4,5 +4,7 @@
  daphne
  django-crispy-forms
  django-npm
+ django-static-fontawesome
+ django-bootstrap-modal-forms
  channels
  docker

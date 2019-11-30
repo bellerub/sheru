@@ -1,5 +1,16 @@
 from django import forms
+from bootstrap_modal_forms.forms import BSModalForm
 from .models import User, ContainerTemplate, UserDefaultTemplate
+
+class ContainerTemplateModalForm(BSModalForm):
+    class Meta:
+        model = ContainerTemplate
+        fields = ('image','shell',)
+
+class UserUpdateForm(BSModalForm):
+    class Meta:
+        model = User
+        fields = ('email', 'first_name', 'last_name',)
 
 class ContainerTemplateForm(forms.ModelForm):
     class Meta:

@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/css/all.min.css' %}" />
         
         <title>Sheru</title>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -11,8 +12,37 @@
         {% endblock %}
     </head>
     <body class="bg-dark text-white">
-        <nav class="navbar navbar-light bg-secondary w-100 no-gutters">
-            <a class="navbar-brand" href="/">Sheru</a>
+        <nav class="navbar navbar-light navbar-expand-lg bg-secondary w-100 no-gutters">
+            <a class="navbar-brand" href="/"><span class="fa-stack">
+                <i class="fa fa-circle fa-stack-2x" style="color: #3ccc1f"></i>
+                <i class="fas fa-terminal fa-stack-1x"></i>
+                </span><span style="font-size: 1.5rem;"> Sheru</span>
+            </a>
+            {% if user.is_authenticated %}
+            <ul class="nav navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="{% url 'user_profile' %}"><i class="fas fa-user-circle fa-2x"></i></a>
+                </li>
+                <li class="nav-item dropdown">
+                    {% if user.container_templates.all %}
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Shells
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="navbarDropdownMenuLink">
+                        {% for ct in user.container_templates.all %}
+                        <a class="dropdown-item" href="{% url 'shell' pk=ct.pk %}">{{ct.image}} - {{ct.shell}}</a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Shells
+                    </a>
+                    {% endif %}
+
+                </li>
+            </ul>
+            {% endif %}
+            
         </nav>
         <main>
             {% block content %}

@@ -1,12 +1,23 @@
 from django.conf.urls import url, include
+from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
     # Home
     url(r'^$', views.home, name='home'),
+    url(r'^(?P<pk>\d+)/$', views.home, name='shell'),
     url(r'^test/$', views.test, name='test'),
-    
+
+    url(r'^profile/$', views.user_profile, name='user_profile'),
+    url(r'^profile/(?P<pk>\d+)/$', views.user_profile, name='user_detail'),
+    path('profile/update/<int:pk>', views.UserUpdateView.as_view(), name='update_profile'),
+
+    path('create_container_template/', views.ContainerCreateView.as_view(), name='create_container_template'),
+    url(r'^container_template/del/(?P<pk>\d+)/$', views.container_template_del, name='del_container_template'),
+
+    url(r'^default_template/update/(?P<pk>\d+)/$', views.update_default_template, name='update_default_template'),
+
     # Authentication
     url(r'^login/$', auth_views.LoginView.as_view(), {'template_name': 'auth/login.html'}, name='login'),
     #url(r'^logout/$', auth_views.logout, {'template_name': 'auth/logout.html'}, name='logout'),

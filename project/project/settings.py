@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'sheru',
     'channels',
     'crispy_forms',
+    "django_static_fontawesome",
+    'bootstrap_modal_forms',
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

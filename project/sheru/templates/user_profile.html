@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+<script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+<script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+<div class="row w-100 h-75">
+    <div class="my-auto mx-auto">
+        <div class="card shadow text-dark" style="width: 60rem">
+            <div class="card-body">
+                <div class="float-right"><button class="btn update-profile" style="background-color:transparent;"><i class="fas fa-user-edit"></i></button></div>
+                <h3 class="card-title">
+                    {% if user.first_name %}
+                        {{ user.first_name }} {{ user.last_name }}
+                    {% else %}
+                        {{ user.username }}
+                    {% endif %}
+                </h3>
+                <i>Last Login: {{ user.last_login }}</i>
+
+                <p>Email: <a href="mailto:{{ user.email }}">{{user.email}}</a></p>
+            </div>
+        </div>
+        <div class="card mt-4 shadow text-dark" style="width: 60rem">
+            <div class="card-body">
+                <div class="float-right"><button class="btn create-container-template" style="background-color:transparent;"><i class="fas fa-plus-circle"></i></button></div>
+                <h4 class="card-title">Container Templates</h4>
+
+                {% if user.container_templates.all %}
+                <table class="table w-100">
+                    <tbody>
+                    {% if user.default_template %}
+                    <tr>
+                        <td><a href="{% url 'del_container_template' pk=user.default_template.template.pk %}"><i class="fas fa-trash-alt"></i></a></td>
+                        <td><a href="#"><i class="fas fa-star"></i></a></td>
+                        <td>{{ user.default_template.template.image }}</td>
+                        <td>{{ user.default_template.template.shell }}</td>
+                    </tr>
+                    {% endif %}
+                    {% for ct in user.container_templates.all %}
+                    {% if ct.pk != user.default_template.template.pk %}
+                    <tr>
+                        <td><a href="{% url 'del_container_template' pk=ct.pk %}"><i class="fas fa-trash-alt"></i></a></td>
+                        <td><a href="{% url 'update_default_template' pk=ct.pk %}"><i class="far fa-star"></i></a></td>
+                        <td>{{ ct.image }}</td>
+                        <td>{{ ct.shell }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <i>No container templates setup at this time</i>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".create-container-template").modalForm({
+            formURL: "{% url 'create_container_template' %}"
+        });
+
+        $(".update-profile").modalForm({
+            formURL: "{% url 'update_profile' pk=user.pk %}"
+        });
+    });
+</script>
+{% endblock %}
