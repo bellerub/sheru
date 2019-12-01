@@ -8,10 +8,12 @@
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+        <script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
         {% block extra_head %}
         {% endblock %}
     </head>
-    <body class="bg-dark text-white">
+    <body class="bg-dark text-white h-100">
         <nav class="navbar navbar-light navbar-expand-lg bg-secondary w-100 no-gutters">
             <a class="navbar-brand" href="/"><span class="fa-stack">
                 <i class="fa fa-circle fa-stack-2x" style="color: #3ccc1f"></i>
@@ -44,7 +46,7 @@
             {% endif %}
             
         </nav>
-        <main>
+        <main {% block main_extra %}{% endblock %}>
             {% block content %}
             {% endblock %}
         </main>

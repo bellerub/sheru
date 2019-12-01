@@ -3,7 +3,6 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'xterm/dist/xterm.css' %}" />
-<script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
 <script src="{% static 'xterm/dist/xterm.js' %}"></script>
 <script src="{% static 'xterm/dist/addons/fit/fit.js' %}"></script>
 <script src="{% static 'xterm/dist/addons/webLinks/webLinks.js' %}"></script>
@@ -12,10 +11,12 @@
 <script src="{% static 'xterm/dist/addons/attach/attach.js' %}"></script>
 {% endblock %}
 
+{% block main_extra %}
+style="height: calc(100% - 65px) !important;"
+{% endblock %}
+
 {% block content %}
-<div class="h-100">
-<div id="terminal-container">
-</div>
+<div id="terminal-container" style="height: calc(100% - 65px) !important;">
 </div>
 <!--
 <div id="terminal"></div>
@@ -39,6 +40,7 @@
           cursorBlink: true,
           windowsMode:true,
           scrollback: true,
+          scrollback: 2000
           //rows:10
       });
       if (typeof(term_websocket) != "undefined"){
