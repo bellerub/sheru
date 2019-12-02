@@ -17,4 +17,5 @@ All settings can be provided as environment variables:
 ## Credits
 
 * [xterm.js](https://xtermjs.org/): Used for front-end terminal emulator
-* [django]
+* [This article](https://ynotes.cn/blog/article_detail/180): Used as my basis for my [django-channels](https://channels.readthedocs.io/en/latest/index.html) implementation
+* [Font Awesome](https://fontawesome.com/): Used for my icons

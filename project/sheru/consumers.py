@@ -1,3 +1,12 @@
+#####################################################################################
+#
+# The code here is largely based off this: https://ynotes.cn/blog/article_detail/180
+#
+# I'd like to update this to interact directly with the websocket exposed by the
+# docker sdk to fix some issues. Not sure how to go about this though.
+#
+#####################################################################################
+
 from channels.generic.websocket import WebsocketConsumer
 import docker
 import threading

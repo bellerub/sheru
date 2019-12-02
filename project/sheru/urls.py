@@ -7,7 +7,6 @@ urlpatterns = [
     # Home
     url(r'^$', views.home, name='home'),
     url(r'^(?P<pk>\d+)/$', views.home, name='shell'),
-    url(r'^test/$', views.test, name='test'),
 
     url(r'^profile/$', views.user_profile, name='user_profile'),
     url(r'^profile/(?P<pk>\d+)/$', views.user_profile, name='user_detail'),

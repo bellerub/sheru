@@ -104,6 +104,3 @@ def set_default_container(request):
             def_container.owner = get_object_or_404(User, pk=request.user.pk)
             def_container.save()
             return redirect('user_profile')
-
-def test(request):
-    return render(request, 'test.html')

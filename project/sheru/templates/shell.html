@@ -36,6 +36,7 @@ style="height: calc(100% - 65px) !important;"
       Terminal.applyAddon(attach);
       Terminal.applyAddon(fullscreen)
       Terminal.applyAddon(fit)
+      Terminal.applyAddon(webLinks)
       const term = new Terminal({
           cursorBlink: true,
           windowsMode:true,
@@ -51,6 +52,8 @@ style="height: calc(100% - 65px) !important;"
       term.focus();
       term.toggleFullScreen(true);
       term.fit()
+      term.webLinksInit();
+      term.writeln('Welcome to Sheru! - https://github.com/soarinferret/sheru\r\n');
       //console.log(`size: ${term.cols} columns, ${term.rows} rows`)
       const protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
       const port = location.port ? `:${location.port}` : '';
@@ -58,6 +61,7 @@ style="height: calc(100% - 65px) !important;"
       term_websocket = new WebSocket(socketUrl);
       term_websocket.onopen = (ev) => { term.attach(term_websocket); };
       term_websocket.onclose = function(ev){
+          term.writeln('\r\nConnection closed.')
           console.log('Connection closed.');
       };                   
   });
