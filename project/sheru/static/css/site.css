@@ -1,9 +1,40 @@
-.fill {
-    top: 40px;
-    left: 0;
-    right: 0;
-    bottom: 0;
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+#terminal-container {
+    flex: 1;
+}
+
+.navbar {
+    flex-shrink: 0;
+    padding: 0;
+}
+
+.navbar>* {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav {
+    flex-direction: row;
+}
+
+.navbar-nav li {
+    margin-right: 8px;
+}
+
+.navbar-nav .dropdown-menu {
     position: absolute;
-    width: auto;
-    height: auto;
+}
+
+.xterm {
+    height: 100%;
 }

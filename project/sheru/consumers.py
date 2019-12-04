@@ -35,7 +35,7 @@ class CommandConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         # Close Thread & shutdwon socket
         self.stop_thread=True
-        self.socket._sock.send('stop\r\n'.encode('utf-8'))
+        self.socket._sock.send('exit\r\n'.encode('utf-8'))
 
         self.socket.close()
 
