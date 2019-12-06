@@ -47,7 +47,7 @@
       //console.log(`size: ${term.cols} columns, ${term.rows} rows`)
       const protocol = (location.protocol === 'https:') ? 'wss://' : 'ws://';
       const port = location.port ? `:${location.port}` : '';
-      const socketUrl = `${protocol}${location.hostname}${port}/ws/{{ user.pk }}`;
+      const socketUrl = `${protocol}${location.hostname}${port}/ws/{{ user.pk }}/${term.cols}/${term.rows}`;
       term_websocket = new WebSocket(socketUrl);
       term_websocket.onopen = (ev) => { term.attach(term_websocket); };
       term_websocket.onclose = function(ev){

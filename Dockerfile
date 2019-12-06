@@ -43,6 +43,8 @@ RUN apk --no-cache add libpq bash npm && \
 ADD requirements.txt /project/
 RUN pip install -r requirements.txt
 
+# Replace a file in docker-py with custom version
+ADD ./exec_api.py /usr/local/lib/python3.7/site-packages/docker/api/exec_api.py
 
 ADD ./project/ /project/
 ADD ./entrypoint.sh /project
