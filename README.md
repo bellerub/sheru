@@ -1,3 +1,5 @@
+![alt text](project/sheru/static/sheru-logo.png)
+
 # What is Sheru?
 
 The goal of Sheru is simple - provide a experience similar to popular cloud shell environments (like Azure Cloud Shell) on a self-hosted server.
@@ -18,4 +20,5 @@ All settings can be provided as environment variables:
 
 * [xterm.js](https://xtermjs.org/): Used for front-end terminal emulator
 * [This article](https://ynotes.cn/blog/article_detail/180): Used as my basis for my [django-channels](https://channels.readthedocs.io/en/latest/index.html) implementation
-* [Font Awesome](https://fontawesome.com/): Used for my icons
+* [Font Awesome](https://fontawesome.com/): Used for icons in the project
+* [LogoMakr](https://logomakr.com): Created my free logo at LogoMakr.com

@@ -17,9 +17,7 @@
     <body class="bg-dark text-white h-100">
         <nav class="navbar navbar-light navbar-expand-lg bg-secondary w-100 no-gutters">
             <a class="navbar-brand" href="/"><span class="fa-stack">
-                <i class="fa fa-circle fa-stack-2x" style="color: #3ccc1f"></i>
-                <i class="fas fa-terminal fa-stack-1x"></i>
-                </span><span style="font-size: 1.5rem;"> Sheru</span>
+                <img src="{% static 'sheru-logo.png' %}" width="106" height="40">
             </a>
             {% if user.is_authenticated %}
             <ul class="nav navbar-nav ml-auto">

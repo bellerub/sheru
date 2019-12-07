@@ -18,6 +18,10 @@ main {
     padding: 0;
 }
 
+.navbar-brand {
+    margin-left: 8px;
+}
+
 .navbar>* {
     display: flex;
     align-items: center;
