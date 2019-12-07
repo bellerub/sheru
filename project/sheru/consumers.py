@@ -13,19 +13,16 @@ class CommandConsumer(WebsocketConsumer):
         self.accept()
 
         # Connect to Docker API, get container ID
-        self.client=docker.APIClient(base_url='unix://var/run/docker.sock')
-        self.container_id = self.client.containers(quiet=1, filters={'status': 'running', 'label': "sheru.id="+self.user_id})[0]['Id']
+        self.client=docker.DockerClient(base_url='unix://var/run/docker.sock')
+        self.container = self.client.containers.list(filters={'status': 'running', 'label': "sheru.id="+self.user_id})[0]
+        self.container_id = self.container.id
 
         # Push logs
-        self.send(text_data=self.client.logs(self.container_id,stdout=True, stderr=True).decode('utf-8'))
+        self.send(text_data=self.client.api.logs(self.container_id,stdout=True, stderr=True).decode('utf-8'))
 
-        # Create & Connect to Exec
-        logger.info('Exec\'ing into '+self.container_id)
-        self.ex = self.client.exec_create(self.container_id, 'sh', tty=True, stdin=True)
-        x = self.client.exec_start(self.ex, tty=True, stream=True, demux=True, socket=True, double_return=True)
-        self.client.exec_resize(self.ex, height=self.term_height, width=self.term_width)
-        self.socket = x['socket']
-        self.stream = x['stream']
+        # Resize TTY and attach socket
+        self.container.resize(height=self.term_height, width=self.term_width)
+        self.socket=self.client.api.attach_socket(self.container_id, params={'stdin': 1, 'stream': 1})
 
         # Start thread acquisition stdoutï¼Œstdinï¼Œlogs data stream
         logger.info('Start the thread')
@@ -42,9 +39,9 @@ class CommandConsumer(WebsocketConsumer):
 
         # Close & delete container
         logger.info('Stopping and removing ' + self.container_id)
-        self.client.stop(self.container_id)
-        self.client.wait(self.container_id)
-        self.client.remove_container(self.container_id)
+        self.client.api.stop(self.container_id)
+        self.client.api.wait(self.container_id)
+        self.client.api.remove_container(self.container_id)
 
         #client closed
         self.client.close()
@@ -54,7 +51,7 @@ class CommandConsumer(WebsocketConsumer):
         logger.debug('CommandConsumer:receive')
 
     def send_stream_log(self):
-        for b in self.stream:
+        for b in self.client.api.attach(self.container_id,stderr=True,stdout=True,stream=True,demux=True):
             logger.debug(b)
             if self.stop_thread:
                 break
