@@ -23,25 +23,35 @@
             </a>
             {% if user.is_authenticated %}
             <ul class="nav navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a href="{% url 'user_profile' %}"><i class="fas fa-user-circle fa-2x"></i></a>
-                </li>
                 <li class="nav-item dropdown">
                     {% if user.container_templates.all %}
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Shells
+                    <a class="nav-link dropdown-toggle" href="#" id="shellNavbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <b>Shells</b>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="navbarDropdownMenuLink">
+                    <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="shellNavbarDropdownMenuLink">
                         {% for ct in user.container_templates.all %}
                         <a class="dropdown-item" href="{% url 'shell' pk=ct.pk %}">{{ct.image}} - {{ct.shell}}</a>
                         {% endfor %}
                     </div>
                     {% else %}
-                    <a class="nav-link dropdown-toggle disabled" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Shells
+                    <a class="nav-link dropdown-toggle disabled" href="#" id="shellNavbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <b>Shells</b>
                     </a>
                     {% endif %}
-
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#" id="userNavbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user-circle fa-2x"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="userNavbarDropdownMenuLink">
+                        {% if user.is_superuser %}
+                        <a class="dropdown-item" href="/admin">Admin<i class="fas fa-tools" style="width: 20px; padding-left: .5em;"></i></a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'user_profile' %}">Profile<i class="fas fa-user-cog" style="width: 20px; padding-left: .5em;"></i></a>
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout<i class="fas fa-sign-out-alt" style="width: 20px; padding-left: .5em;"></i></a>
+                    </div>
+                    
                 </li>
             </ul>
             {% endif %}
