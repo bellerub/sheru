@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
+
+<div class="row w-100" style="margin-top: 10vh;">
+    <div class="my-auto mx-auto">
+        <div class="card shadow text-dark" style="width: 60rem">
+            <div class="card-body">
+                <div class="float-right"><button class="btn new-user-button" style="background-color:transparent;"><i class="fas fa-plus-circle"></i></button></div>
+                <h3 class="card-title">
+                    User Management
+                </h3>
+
+                <table class="table w-100 table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Last Sign-In</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for u in users %}
+                        <tr>
+                            <td>{{ u.pk }}</td>
+                            <td>{{ u.first_name }} {{ u.last_name }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>{{ u.last_login }}</td>
+                            <td>
+                                <a href="{% url 'user_detail' pk=u.pk %}"><i class="fas fa-user-cog"></i></a>
+                                <button class="btn delete-user-button" style="background-color:transparent;" data-id="{% url 'delete_user' pk=u.pk %}"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+      // Delete User buttons
+      $(".delete-user-button").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      });
+  
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".new-user-button").modalForm({
+            formURL: "{% url 'new_user' %}"
+        });
+
+        $(".delete-user-button").modalForm({
+            formURL: $(this).data('id')
+        });
+    });
+</script>
+
+{% endblock %}

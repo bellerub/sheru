@@ -61,3 +61,11 @@ volumes:
   staticfiles:
   pgdata:
     external: true
+  home_dir:
+    driver: "local"
+    driver_opts:
+      type: "cifs"
+      o: "username=${SMB_USR},password=${SMB_PWD},iocharset=utf8,sec=ntlmssp,file_mode=0777,dir_mode=0777,vers=3.0"
+      device: '${SMB_SHARE}'
+    labels:
+      sheru.user-email: "thecodye@kanto.cloud"

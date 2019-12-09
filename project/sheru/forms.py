@@ -1,6 +1,15 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from bootstrap_modal_forms.forms import BSModalForm
+from bootstrap_modal_forms.mixins import PopRequestMixin, CreateUpdateAjaxMixin
 from .models import User, ContainerTemplate, UserDefaultTemplate
+
+
+class CustomUserCreationForm(PopRequestMixin, CreateUpdateAjaxMixin,
+                             UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name', 'password1', 'password2']
 
 class ContainerTemplateModalForm(BSModalForm):
     class Meta:
