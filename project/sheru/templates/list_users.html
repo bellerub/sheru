@@ -15,8 +15,8 @@
     </div>
 </div>
 
-<div class="row w-100" style="margin-top: 10vh;">
-    <div class="my-auto mx-auto">
+<div class="container">
+    <div class="row justify-content-md-center" style="margin-top: 10vh;">
         <div class="card shadow text-dark" style="width: 60rem">
             <div class="card-body">
                 <div class="float-right"><button class="btn new-user-button" style="background-color:transparent;"><i class="fas fa-plus-circle"></i></button></div>
@@ -28,9 +28,9 @@
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
-                            <th scope="col">Name</th>
+                            <th class="d-none d-sm-table-cell" scope="col">Name</th>
                             <th scope="col">Email</th>
-                            <th scope="col">Last Sign-In</th>
+                            <th class="d-none d-sm-table-cell" scope="col">Last Sign-In</th>
                             <th scope="col"></th>
                         </tr>
                     </thead>
@@ -38,9 +38,9 @@
                         {% for u in users %}
                         <tr>
                             <td>{{ u.pk }}</td>
-                            <td>{{ u.first_name }} {{ u.last_name }}</td>
+                            <td class="d-none d-sm-table-cell">{{ u.first_name }} {{ u.last_name }}</td>
                             <td>{{ u.email }}</td>
-                            <td>{{ u.last_login }}</td>
+                            <td class="d-none d-sm-table-cell">{{ u.last_login }}</td>
                             <td>
                                 <a href="{% url 'user_detail' pk=u.pk %}"><i class="fas fa-user-cog"></i></a>
                                 <button class="btn delete-user-button" style="background-color:transparent;" data-id="{% url 'delete_user' pk=u.pk %}"><i class="fas fa-trash-alt"></i></button>

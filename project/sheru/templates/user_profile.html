@@ -15,8 +15,8 @@
     </div>
 </div>
 
-<div class="row w-100" style="margin-top: 10vh;">
-    <div class="my-auto mx-auto">
+<div class="container">
+    <div class="row justify-content-md-center" style="margin-top: 10vh;">
         <div class="card shadow text-dark" style="width: 60rem">
             <div class="card-body">
                 <div class="float-right"><button class="btn update-profile" style="background-color:transparent;"><i class="fas fa-user-edit"></i></button></div>
@@ -44,7 +44,7 @@
                     <tr>
                         <td><a href="{% url 'del_container_template' pk=u.default_template.template.pk %}"><i class="fas fa-trash-alt"></i></a></td>
                         <td><a href="#"><i class="fas fa-star"></i></a></td>
-                        <td>{{ u.default_template.template.image }}</td>
+                        <td class="text-break">{{ u.default_template.template.image }}</td>
                         <td>{{ u.default_template.template.shell }}</td>
                     </tr>
                     {% endif %}
@@ -53,7 +53,7 @@
                     <tr>
                         <td><a href="{% url 'del_container_template' pk=ct.pk %}"><i class="fas fa-trash-alt"></i></a></td>
                         <td><a href="{% url 'update_default_template' pk=ct.pk %}"><i class="far fa-star"></i></a></td>
-                        <td>{{ ct.image }}</td>
+                        <td class="text-break">{{ ct.image }}</td>
                         <td>{{ ct.shell }}</td>
                     </tr>
                     {% endif %}
