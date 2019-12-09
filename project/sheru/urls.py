@@ -15,6 +15,7 @@ urlpatterns = [
 
     # Container Template Management
     path('create_container_template/', views.ContainerCreateView.as_view(), name='create_container_template'),
+    path('create_container_template/<int:pk>', views.ContainerCreateView.as_view(), name='create_container_template_adv'),
     url(r'^container_template/del/(?P<pk>\d+)/$', views.container_template_del, name='del_container_template'),
     url(r'^default_template/update/(?P<pk>\d+)/$', views.update_default_template, name='update_default_template'),
 

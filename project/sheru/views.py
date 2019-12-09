@@ -34,19 +34,29 @@ class ContainerCreateView(BSModalCreateView):
     template_name = 'modalForms/create_container_template.html'
     form_class = ContainerTemplateModalForm
     success_message = 'Success: Template was created.'
-    success_url = reverse_lazy('user_profile')
+    #success_url = reverse_lazy('user_profile')
     
+    def get_success_url(self):
+        if 'pk' in self.kwargs and self.request.user.is_superuser:
+            return reverse_lazy('user_detail', kwargs={'pk': self.kwargs['pk']})
+        return reverse_lazy('user_profile')
+        
+
     def form_valid(self, form):
         if not self.request.is_ajax():
+            if 'pk' in self.kwargs and self.request.user.is_superuser:
+                uid = self.kwargs['pk']
+            else:
+                uid = self.request.user.pk
             templ = form.save(commit=False)
-            templ.owner = User.objects.get(pk=self.request.user.pk)
+            templ.owner = User.objects.get(pk=uid)
             t = templ.save()
             try:
                 # call the method to try and cause an error
-                get_default = self.request.user.default_template
+                get_default = User.objects.get(pk=uid).default_template
             except ObjectDoesNotExist:
                 # create default template
-                default_templ = UserDefaultTemplate(user = User.objects.get(pk=self.request.user.pk), template = ContainerTemplate.objects.get(pk=templ.pk))
+                default_templ = UserDefaultTemplate(user = User.objects.get(pk=uid), template = ContainerTemplate.objects.get(pk=templ.pk))
                 default_templ.save()
         return super(ContainerCreateView, self).form_valid(form)
 

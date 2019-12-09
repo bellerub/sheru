@@ -72,7 +72,11 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".create-container-template").modalForm({
+            {% if request.user.pk == u.pk %}
             formURL: "{% url 'create_container_template' %}"
+            {% else %}
+            formURL: "{% url 'create_container_template_adv' pk=u.pk%}"
+            {% endif %}
         });
 
         $(".update-profile").modalForm({
