@@ -24,7 +24,7 @@ class CommandConsumer(WebsocketConsumer):
         self.container.resize(height=self.term_height, width=self.term_width)
         self.socket=self.client.api.attach_socket(self.container_id, params={'stdin': 1, 'stream': 1})
 
-        # Start thread acquisition stdoutï¼Œstdinï¼Œlogs data stream
+        # Start thread acquisition stdout & stdin logs data stream
         logger.info('Start the thread')
         self.stop_thread=False
         self.t = threading.Thread(target=self.send_stream_log)
@@ -56,7 +56,7 @@ class CommandConsumer(WebsocketConsumer):
             if self.stop_thread:
                 break
             if b[0]:
-                self.send(text_data=b[0].decode('utf-8'))
+                self.send(text_data=b[0].decode('utf-8', 'ignore'))
             if b[1]:
-                self.send(text_data=b[1].decode('utf-8'))
+                self.send(text_data=b[1].decode('utf-8', 'ignore'))
         logger.info('Exit the thread')
