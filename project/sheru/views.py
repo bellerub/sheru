@@ -41,7 +41,6 @@ class ContainerCreateView(BSModalCreateView):
             return reverse_lazy('user_detail', kwargs={'pk': self.kwargs['pk']})
         return reverse_lazy('user_profile')
         
-
     def form_valid(self, form):
         if not self.request.is_ajax():
             if 'pk' in self.kwargs and self.request.user.is_superuser:
