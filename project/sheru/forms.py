@@ -14,7 +14,12 @@ class CustomUserCreationForm(PopRequestMixin, CreateUpdateAjaxMixin,
 class ContainerTemplateModalForm(BSModalForm):
     class Meta:
         model = ContainerTemplate
-        fields = ('image','shell',)
+        fields = ('friendly_name','image','shell',)
+
+class ContainerTemplateUpdateForm(BSModalForm):
+    class Meta:
+        model = ContainerTemplate
+        fields = ('friendly_name','image','shell',)
 
 class UserUpdateForm(BSModalForm):
     class Meta:

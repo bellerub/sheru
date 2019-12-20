@@ -28,7 +28,11 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="shellNavbarDropdownMenuLink">
                         {% for ct in user.container_templates.all %}
-                        <a class="dropdown-item" href="{% url 'shell' pk=ct.pk %}">{{ct.image}} - {{ct.shell}}</a>
+                        <a class="dropdown-item" href="{% url 'shell' pk=ct.pk %}">
+                            {% if ct.friendly_name %}{{ ct.friendly_name }}{% else %}
+                            {{ct.image}} - {{ct.shell}}
+                            {% endif %}
+                        </a>
                         {% endfor %}
                     </div>
                     {% else %}

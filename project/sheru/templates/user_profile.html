@@ -39,22 +39,39 @@
 
                 {% if u.container_templates.all %}
                 <table class="table w-100">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Friendly Name</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Image</th>
+                            <th scope="col" class="d-none d-sm-table-cell">Shell</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
                     <tbody>
                     {% if u.default_template %}
                     <tr>
-                        <td><a href="{% url 'del_container_template' pk=u.default_template.template.pk %}"><i class="fas fa-trash-alt"></i></a></td>
                         <td><a href="#"><i class="fas fa-star"></i></a></td>
-                        <td class="text-break">{{ u.default_template.template.image }}</td>
-                        <td>{{ u.default_template.template.shell }}</td>
+                        <td>{{ u.default_template.template.friendly_name }}</td>
+                        <td class="text-break d-none d-sm-table-cell">{{ u.default_template.template.image }}</td>
+                        <td class="d-none d-sm-table-cell">{{ u.default_template.template.shell }}</td>
+                        <td>
+                            <button class="btn update-template-{{ u.default_template.template.pk }}" style="background-color:transparent;"><i class="fas fa-edit"></i></button>
+                            <a href="{% url 'del_container_template' pk=u.default_template.template.pk %}"><button class="btn" style="background-color:transparent;"><i class="fas fa-trash-alt"></i></button></a>
+                        </td>
                     </tr>
                     {% endif %}
                     {% for ct in u.container_templates.all %}
                     {% if ct.pk != u.default_template.template.pk %}
                     <tr>
-                        <td><a href="{% url 'del_container_template' pk=ct.pk %}"><i class="fas fa-trash-alt"></i></a></td>
                         <td><a href="{% url 'update_default_template' pk=ct.pk %}"><i class="far fa-star"></i></a></td>
-                        <td class="text-break">{{ ct.image }}</td>
-                        <td>{{ ct.shell }}</td>
+                        <td>{{ ct.friendly_name }}</td>
+                        <td class="text-break d-none d-sm-table-cell">{{ ct.image }}</td>
+                        <td class="d-none d-sm-table-cell">{{ ct.shell }}</td>
+                        <td>
+                            <button class="btn update-template-{{ ct.pk }}" style="background-color:transparent;"><i class="fas fa-edit"></i></button>
+                            <a href="{% url 'del_container_template' pk=ct.pk %}"><button class="btn" style="background-color:transparent;"><i class="fas fa-trash-alt"></i></button></a>
+                        </td>
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -82,6 +99,11 @@
         $(".update-profile").modalForm({
             formURL: "{% url 'update_profile' pk=u.pk %}"
         });
+        {% for ct in u.container_templates.all %}
+        $(".update-template-{{ ct.pk }}").modalForm({
+            formURL: "{% url 'update_template' pk=ct.pk %}"
+        });
+        {% endfor %}
     });
 </script>
 {% endblock %}

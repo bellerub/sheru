@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
-from .forms import DefaultContainerTemplateForm, ContainerTemplateForm, ContainerTemplateModalForm, UserUpdateForm, CustomUserCreationForm
+from .forms import DefaultContainerTemplateForm, ContainerTemplateForm, ContainerTemplateModalForm, ContainerTemplateUpdateForm, UserUpdateForm, CustomUserCreationForm
 from .models import User, ContainerTemplate, UserDefaultTemplate
 from .docker_management import create_container, check_existing, remove_all_existing_container
 
@@ -58,6 +58,18 @@ class ContainerCreateView(BSModalCreateView):
                 default_templ = UserDefaultTemplate(user = User.objects.get(pk=uid), template = ContainerTemplate.objects.get(pk=templ.pk))
                 default_templ.save()
         return super(ContainerCreateView, self).form_valid(form)
+
+@method_decorator(login_required, name='dispatch')
+class ContainerUpdateView(BSModalUpdateView):
+    model = ContainerTemplate
+    template_name = 'modalForms/edit_container_template.html'
+    form_class = ContainerTemplateUpdateForm
+    success_message = 'Success: Container template was updated.'
+
+    def get_success_url(self):
+        if self.request.user.pk == self.object.owner.id:
+            return reverse_lazy('user_profile')
+        return reverse_lazy('user_detail', kwargs={'pk': self.object.owner.id})
 
 @method_decorator(login_required, name='dispatch')
 @method_decorator(user_passes_test(lambda u: u.is_superuser), name='dispatch')

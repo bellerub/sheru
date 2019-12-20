@@ -52,12 +52,12 @@ class ContainerTemplate(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
 
     owner = models.ForeignKey(User, related_name='container_templates', on_delete=models.CASCADE)
+    friendly_name = models.CharField(max_length=30, blank=True)
     image = models.CharField(max_length=256)
     shell = models.CharField(max_length=256)
 
     def __str__(self):
         return self.image + ": " + self.shell
-
 
 class UserDefaultTemplate(models.Model):
     user = models.OneToOneField(User, related_name='default_template', on_delete=models.CASCADE, primary_key=True)
