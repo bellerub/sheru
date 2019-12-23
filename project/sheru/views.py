@@ -7,27 +7,31 @@ from django.core.exceptions import ObjectDoesNotExist
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
 from .forms import DefaultContainerTemplateForm, ContainerTemplateForm, ContainerTemplateModalForm, ContainerTemplateUpdateForm, UserUpdateForm, CustomUserCreationForm
 from .models import User, ContainerTemplate, UserDefaultTemplate
-from .docker_management import create_container, check_existing, remove_all_existing_container
+#from .docker_management import create_container, check_existing, remove_all_existing_container
+import uuid
 
 # Create your views here.
 @login_required
 def home(request, pk=None):
-    if pk == None:
+    try:
+        get_default = request.user.default_template
+    except ObjectDoesNotExist:
+        return redirect('user_profile')
+
+    # Create session guid, if it doesn't yet exist
+    if 'uid' not in request.session:
+        request.session['uid'] = str(uuid.uuid4())
+    session_uid = request.session.get('uid')
+    print(str(session_uid))
+    
+    # Get Template ID
+    template_id = get_default.template.id
+    if pk != None:
         try:
-            get_default = request.user.default_template
-        except ObjectDoesNotExist:
+            template_id=ContainerTemplate.objects.get(pk=pk).id
+        except ContainerTemplate.DoesNotExist:
             return redirect('user_profile')
-
-        if check_existing(request.user):
-            return render(request, 'shell.html')
-        else:
-            create_container(request.user)
-            return render(request, 'shell.html')
-    else:
-        remove_all_existing_container(request.user)
-        create_container(request.user, template=ContainerTemplate.objects.get(pk=pk))
-
-    return render(request, 'shell.html')
+    return render(request, 'shell.html', {'uid': session_uid, 'ctid': template_id})
 
 @method_decorator(login_required, name='dispatch')
 class ContainerCreateView(BSModalCreateView):

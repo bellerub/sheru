@@ -1,20 +1,47 @@
+from .docker_management import create_container
 from channels.generic.websocket import WebsocketConsumer
-import docker
-import threading
-import logging
+from .models import ContainerTemplate
+import docker, sys, threading, logging
 
 logger = logging.getLogger('django')
 
 class CommandConsumer(WebsocketConsumer):
     def connect(self):
-        self.user_id = self.scope['url_route']['kwargs']['cid']
+        self.user_id = self.scope['url_route']['kwargs']['uid']
+        self.templ_id = self.scope['url_route']['kwargs']['ctid']
         self.term_height = self.scope['url_route']['kwargs']['th']
         self.term_width = self.scope['url_route']['kwargs']['tw']
         self.accept()
 
-        # Connect to Docker API, get container ID
+        user = self.scope['user']
+
+        # Connect to Docker API
         self.client=docker.DockerClient(base_url='unix://var/run/docker.sock')
-        self.container = self.client.containers.list(filters={'status': 'running', 'label': "sheru.id="+self.user_id})[0]
+        
+        # Get the Template
+        try:
+            templ = user.container_templates.get(pk=self.templ_id)
+        except ContainerTemplate.DoesNotExist:
+            # should't ever get here but just in case ...
+            self.send(text_data="\u001b[33mCouldn't find template \u001b[36m" + str(self.templ_id) + "\u001b[33m, using default instead.\u001b[0m\r\n")    
+            templ = user.default_template.template
+
+        # Check for the image, pull if not found
+        try:
+            self.client.images.get(templ.image)
+        except docker.errors.ImageNotFound:
+            self.send(text_data="Image \"\u001b[36m" + templ.image + "\u001b[0m\" not found locally. Pulling image...")
+            try: 
+                self.client.images.pull(templ.image)
+                self.send(text_data="\u001b[32m Done!\u001b[0m\r\n\r\n")
+            except:
+                self.send(text_data="\u001b[31m Failed!\r\n\r\nError: " + str(sys.exc_info()[1]) + "\u001b[0m\r\n")
+                # 4004: Image not found ;)
+                self.close(code=4004)
+                return None
+
+        # Create Container
+        self.container = create_container(self.client, user, self.user_id, templ)
         self.container_id = self.container.id
 
         # Push logs
@@ -31,17 +58,17 @@ class CommandConsumer(WebsocketConsumer):
         self.t.start()
 
     def disconnect(self, close_code):
-        # Close Thread & shutdwon socket
-        logger.info('Stopping the thread and closing the socket')
-        self.stop_thread=True
-        self.socket._sock.send('exit\r\n'.encode('utf-8'))
-        self.socket.close()
+        # if not closing because I gave error code
+        if close_code < 4000:
+            # Close Thread & shutdwon socket
+            logger.info('Stopping the thread and closing the socket')
+            self.stop_thread=True
+            self.socket.close()
 
-        # Close & delete container
-        logger.info('Stopping and removing ' + self.container_id)
-        self.client.api.stop(self.container_id)
-        self.client.api.wait(self.container_id)
-        self.client.api.remove_container(self.container_id)
+            logger.info('Stopping and removing ' + self.container_id)
+            #self.client.api.stop(self.container_id)
+            #self.client.api.wait(self.container_id)
+            self.client.api.remove_container(self.container_id, force=True)
 
         #client closed
         self.client.close()
