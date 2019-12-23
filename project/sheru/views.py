@@ -138,18 +138,8 @@ def container_template_del(request, pk):
 def user_profile(request, pk=None):
     if pk != None and request.user.is_superuser and request.user.pk != int(pk):
         user = get_object_or_404(User, pk=pk)
-        return render(request, 'user_profile.html', {'u': user})
-    return render(request, 'user_profile.html', {'u': request.user})
-
-#@login_required
-#def set_default_container(request):
-#    if request.method == "POST":
-#        form = DefaultContainerTemplateForm(request.POST)
-#        if form.is_valid():
-#            def_container = form.save(commit=False)
-#            def_container.owner = get_object_or_404(User, pk=request.user.pk)
-#            def_container.save()
-#            return redirect('user_profile')
+        return render(request, 'user_profile.html', {'u': user, 'running_containers': get_running_containers(user_pk=user.pk)})
+    return render(request, 'user_profile.html', {'u': request.user, 'running_containers': get_running_containers(user_pk=request.user.pk)})
 
 @login_required
 def admin(request):
@@ -160,7 +150,7 @@ def admin(request):
 
 @login_required
 def kill_user_container(request, container_id):
-    if request.user.is_superuser:
+    if request.user.is_superuser or any(c['id'] == container_id for c in get_running_containers(user_pk=request.user.pk)):
         try:
             kill_container(container_id)
             messages.success(request, "Container with id \"" + container_id[:10] + "\" was successfully removed")
