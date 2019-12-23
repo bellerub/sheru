@@ -48,7 +48,7 @@
                     </a>
                     <div class="dropdown-menu dropdown-menu-right text-right" aria-labelledby="userNavbarDropdownMenuLink">
                         {% if user.is_superuser %}
-                        <a class="dropdown-item" href="{% url 'list_users' %}">Admin<i class="fas fa-tools" style="width: 20px; padding-left: .5em;"></i></a>
+                        <a class="dropdown-item" href="{% url 'admin' %}">Admin<i class="fas fa-tools" style="width: 20px; padding-left: .5em;"></i></a>
                         {% endif %}
                         <a class="dropdown-item" href="{% url 'user_profile' %}">Profile<i class="fas fa-user-cog" style="width: 20px; padding-left: .5em;"></i></a>
                         <a class="dropdown-item" href="{% url 'logout' %}">Logout<i class="fas fa-sign-out-alt" style="width: 20px; padding-left: .5em;"></i></a>
@@ -70,7 +70,7 @@
             </div>
             {% endfor %}
         {% endif %}
-        
+
         <main {% block main_extra %}{% endblock %}>
             {% block content %}
             {% endblock %}

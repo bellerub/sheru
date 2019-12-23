@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -7,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
 from .forms import DefaultContainerTemplateForm, ContainerTemplateForm, ContainerTemplateModalForm, ContainerTemplateUpdateForm, UserUpdateForm, CustomUserCreationForm
 from .models import User, ContainerTemplate, UserDefaultTemplate
-#from .docker_management import create_container, check_existing, remove_all_existing_container
+from .docker_management import get_running_containers, kill_container, ContainerPermissionDenied
 import uuid
 
 # Create your views here.
@@ -81,7 +82,7 @@ class UserCreateView(BSModalCreateView):
     template_name = 'modalForms/new_user.html'
     form_class = CustomUserCreationForm
     success_message = 'Success: User was created.'
-    success_url = reverse_lazy('list_users')
+    success_url = reverse_lazy('admin')
     
     def form_valid(self, form):
         if not self.request.is_ajax():
@@ -95,7 +96,7 @@ class UserDeleteView(BSModalDeleteView):
     model = User
     template_name = 'modalForms/delete_user.html'
     success_message = 'Success: User was deleted.'
-    success_url = reverse_lazy('list_users')
+    success_url = reverse_lazy('admin')
 
 @method_decorator(login_required, name='dispatch')
 class UserUpdateView(BSModalUpdateView):
@@ -129,6 +130,7 @@ def container_template_del(request, pk):
     templ = get_object_or_404(ContainerTemplate, pk=pk)
     if request.user.pk == templ.owner.pk:
         ContainerTemplate.objects.filter(id=templ.id).delete()
+        messages.success(request, "Template was deleted")
         return redirect('user_profile')
     return redirect('home')
 
@@ -150,7 +152,21 @@ def user_profile(request, pk=None):
 #            return redirect('user_profile')
 
 @login_required
-def list_users(request):
+def admin(request):
     if request.user.is_superuser:
-        return render(request, 'list_users.html', {'users': User.objects.all().order_by('email') })
+        c = get_running_containers()
+        return render(request, 'admin.html', {'users': User.objects.all().order_by('email'), 'running_containers': c })
+    return redirect('user_profile')
+
+@login_required
+def kill_user_container(request, container_id):
+    if request.user.is_superuser:
+        try:
+            kill_container(container_id)
+            messages.success(request, "Container with id \"" + container_id[:10] + "\" was successfully removed")
+        except ContainerPermissionDenied:
+            messages.error(request, "You don't have permission to delete this container.")
+        except:
+            messages.error(request, "Container not found.")
+        return redirect(request.META['HTTP_REFERER'])
     return redirect('user_profile')

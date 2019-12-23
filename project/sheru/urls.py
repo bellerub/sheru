@@ -24,8 +24,11 @@ urlpatterns = [
     url(r'^login/$', auth_views.LoginView.as_view(), {'template_name': 'auth/login.html'}, name='login'),
     path('logout', auth_views.LogoutView.as_view(next_page=reverse_lazy('home')), name='logout'),
 
+    # Admin
+    url(r'^admin/$', views.admin, name='admin'),
+    url(r'^rm/cid/(?P<container_id>\w+)/$', views.kill_user_container, name='remove_cid'),
+
     # User Management
-    url(r'^users/$', views.list_users, name='list_users'),
     path('new_user/', views.UserCreateView.as_view(), name='new_user'),
     path('delete/<int:pk>', views.UserDeleteView.as_view(), name='delete_user')
 ]

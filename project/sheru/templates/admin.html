@@ -52,8 +52,40 @@
                 </table>
             </div>
         </div>
-        
+
+        <div class="card shadow mt-4 text-dark" style="width: 60rem">
+            <div class="card-body">
+                <h3 class="card-title">
+                    Running User Containers
+                </h3>
+
+                <table class="table w-100 table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">User</th>
+                            <th class="d-none d-sm-table-cell" scope="col">Session</th>
+                            <th scope="col">Image</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in running_containers %}
+                        <tr>
+                            <td>{{ c.user }}</td>
+                            <td class="d-none d-sm-table-cell">{{ c.session }}</td>
+                            <td>{{ c.image }}</td>
+                            <td>
+                                <a href="{% url 'remove_cid' container_id=c.id %}"><button class="btn" style="background-color:transparent;"><i class="fas fa-trash-alt"></i></button></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+
+
 </div>
 
 <script type="text/javascript">

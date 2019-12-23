@@ -46,6 +46,11 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    def __str__(self):
+        if self.first_name and self.last_name:
+            return self.last_name + ", " + self.first_name
+        return self.email
+
 class ContainerTemplate(models.Model):
     id = models.AutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)

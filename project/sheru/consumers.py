@@ -39,13 +39,13 @@ class CommandConsumer(WebsocketConsumer):
                 # 4004: Image not found ;)
                 self.close(code=4004)
                 return None
-
-        # Check for new version of image
-        try:
-            if self.client.images.get(templ.image).attrs['RepoDigests'][0].split('@')[1] != self.client.images.get_registry_data(templ.image).id:
-                self.send(text_data="\u001b[33mA new version of \u001b[36m" + templ.image + " \u001b[33mis available to be pulled down.\u001b[0m\r\n\r\n")
-        except:
-            logger.info("Unable to compare local image " + templ.image + " to remote repository.")
+        else:
+            # Check for new version of image
+            try:
+                if self.client.images.get(templ.image).attrs['RepoDigests'][0].split('@')[1] != self.client.images.get_registry_data(templ.image).id:
+                    self.send(text_data="\u001b[33mA new version of \u001b[36m" + templ.image + " \u001b[33mis available to be pulled down.\u001b[0m\r\n\r\n")
+            except:
+                logger.info("Unable to compare local image " + templ.image + " to remote repository.")
 
         # Create Container
         self.container = create_container(self.client, user, self.user_id, templ)
