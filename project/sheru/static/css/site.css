@@ -42,3 +42,7 @@ main {
 .xterm {
     height: 100%;
 }
+
+.alert {
+    margin-top: 60px!important;
+}
