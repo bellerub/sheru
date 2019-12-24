@@ -12,14 +12,31 @@ class CustomUserCreationForm(PopRequestMixin, CreateUpdateAjaxMixin,
         fields = ['email', 'first_name', 'last_name', 'password1', 'password2']
 
 class ContainerTemplateModalForm(BSModalForm):
+
+    dns_server_1 = forms.GenericIPAddressField(required=False)
+    dns_server_2 = forms.GenericIPAddressField(required=False)
+
     class Meta:
         model = ContainerTemplate
-        fields = ('friendly_name','image','shell',)
+        fields = ('friendly_name','image','shell', 'dns_server_1', 'dns_server_2', 'dns_search_domain', 'network_disable', 'user_id', 'working_dir', 'mount_volume', 'mount_location', )
+        labels = {
+            'network_disable': 'Disable networking?',
+            'mount_volume': 'Mount user volume?',
+            'working_dir': 'Working directory',
+        }
 
 class ContainerTemplateUpdateForm(BSModalForm):
+    dns_server_1 = forms.GenericIPAddressField(required=False)
+    dns_server_2 = forms.GenericIPAddressField(required=False)
+
     class Meta:
         model = ContainerTemplate
-        fields = ('friendly_name','image','shell',)
+        fields = ('friendly_name','image','shell', 'dns_server_1', 'dns_server_2', 'dns_search_domain', 'network_disable', 'user_id', 'working_dir', 'mount_volume', 'mount_location', )
+        labels = {
+            'network_disable': 'Disable networking?',
+            'mount_volume': 'Mount user volume?',
+            'working_dir': 'Working directory',
+        }
 
 class UserUpdateForm(BSModalForm):
     class Meta:

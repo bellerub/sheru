@@ -7,26 +7,32 @@ class ContainerPermissionDenied(Exception):
 def create_container(client, user, uid, template=None):
     if client == None:
         client = docker.DockerClient(base_url='unix://var/run/docker.sock')
-    if template:
-        return client.containers.run(
-            template.image,
-            template.shell,
-            stdin_open = True,
-            tty = True,
-            detach = True,
-            remove = True,
-            labels = {"sheru.id": str(uid), "sheru.user": str(user.pk)}
-        )
+    if template == None:
+        template = user.default_template.template
 
-    return client.containers.run(
-        user.default_template.template.image,
-        user.default_template.template.shell,
-        stdin_open = True,
-        tty = True,
-        detach = True,
-        remove = True,
-        labels = {"sheru.id": str(uid), "sheru.user": str(user.pk)}
-    )
+    # Build ParameterSet
+    kwargs = {
+        'stdin_open': True,
+        'tty': True,
+        'detach': True,
+        'remove': True,
+        'labels': {"sheru.id": str(uid), "sheru.user": str(user.pk)},
+        'working_dir': template.working_dir
+    }
+
+    if template.network_disable:
+        kwargs['network_disabled'] = True
+    elif template.dns_server_1:
+        if template.dns_server_2:
+            kwargs['dns'] = [template.dns_server_1, template.dns_server_2]
+        else:
+            kwargs['dns'] = [template.dns_server_1]
+    if template.dns_search_domain: kwargs['dns_search'] = [template.dns_search_domain]
+    if template.user_id: kwargs['user'] = template.user_id
+
+    # TODO logic for volumes   
+
+    return client.containers.run(template.image, template.shell, **kwargs)
 
 def get_running_containers(user_pk=None, client=None):
     if client == None:
@@ -43,7 +49,8 @@ def get_running_containers(user_pk=None, client=None):
                 "user": User.objects.get(pk=c.attrs['Config']['Labels']['sheru.user']),
                 "session": str(c.attrs['Config']['Labels']['sheru.id']),
                 "image": c.attrs['Config']['Image'],
-                "id": c.id
+                "id": c.id,
+                "created": c.attrs['Created']
             }
         )
     return results

@@ -9,13 +9,47 @@
     </button>
   </div>
 
-  <div class="modal-body text-dark">
-      {{ form | crispy }}
+  <div class="modal-body text-dark{% if form.errors %} invalid{% endif %}">
+      <!-- Organize the fields manually :( -->
+
+      {{ form.friendly_name | as_crispy_field }}
+      {{ form.image | as_crispy_field }}      
+      {{ form.shell | as_crispy_field }}
+      
+      <a class="pb-5" data-toggle="collapse" href="#networking-collapse" aria-controls="networking-collapse">Custom Network Settings ></a>
+      <div class="collapse" id="networking-collapse">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              {{ form.dns_server_1 | as_crispy_field }}
+            </div>
+            <div class="form-group col-md-6">
+              {{ form.dns_server_2 | as_crispy_field }}
+            </div>
+          </div>
+          {{ form.dns_search_domain | as_crispy_field }}
+          {{ form.network_disable | as_crispy_field }}
+
+      </div>
+      <br>
+      <a data-toggle="collapse" href="#adv-collapse" aria-controls="adv-collapse">Adv Settings ></a>
+      <div class="collapse" id="adv-collapse">
+          <div class="form-row">
+            <div class="form-group col-md-4 mb-0 align-middle">
+              {{ form.mount_volume|as_crispy_field }}
+            </div>
+            <div class="form-group col-md-8 mb-0 align-middle">
+              {{ form.mount_location|as_crispy_field }}
+            </div>
+          </div>
+          {{ form.working_dir | as_crispy_field }}
+          {{ form.user_id | as_crispy_field }}
+      </div>
+
   </div>
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <button type="submit" class="submit-btn btn btn-primary">Create</button>
+    <button type="button" class="submit-btn btn btn-primary">Create</button>
   </div>
 
 </form>
