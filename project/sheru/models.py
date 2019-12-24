@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+from .validators import validate_absolute_path
 
 # Create your models here.
 
@@ -60,6 +61,18 @@ class ContainerTemplate(models.Model):
     friendly_name = models.CharField(max_length=30, blank=True)
     image = models.CharField(max_length=256)
     shell = models.CharField(max_length=256)
+
+    # Network Options
+    network_disable = models.BooleanField(default=False)
+    dns_server_1 = models.GenericIPAddressField(protocol='IPv4', null=True)
+    dns_server_2 = models.GenericIPAddressField(protocol='IPv4', null=True)
+    dns_search_domain = models.CharField(max_length=252, blank=True)
+
+    # Advanced Options
+    user_id = models.IntegerField(blank=True, null=True)
+    working_dir = models.CharField(max_length=256, validators=[validate_absolute_path], default="/sheru")
+    mount_volume = models.BooleanField(default=False)
+    mount_location = models.CharField(max_length=256, validators=[validate_absolute_path], default="/sheru")
 
     def __str__(self):
         return self.image + ": " + self.shell
