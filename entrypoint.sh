@@ -9,7 +9,7 @@ if [ -z "$WORKER" ]; then
     python manage.py makemigrations --noinput
     python manage.py migrate --noinput
     python manage.py collectstatic --noinput 1> /dev/null
-    daphne project.asgi:application -b 0.0.0.0 -p ${PORT:-8000}
+    daphne project.asgi:application -b 0.0.0.0 -p ${PORT:-8000} --proxy-headers
 else
     python manage.py runworker
 fi
