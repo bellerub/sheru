@@ -71,7 +71,7 @@ class ContainerTemplate(models.Model):
     # Advanced Options
     user_id = models.IntegerField(blank=True, null=True)
     working_dir = models.CharField(max_length=256, validators=[validate_absolute_path], default="/sheru")
-    mount_volume = models.BooleanField(default=False)
+    mount_volume = models.BooleanField(default=True)
     mount_location = models.CharField(max_length=256, validators=[validate_absolute_path], default="/sheru")
 
     def __str__(self):
