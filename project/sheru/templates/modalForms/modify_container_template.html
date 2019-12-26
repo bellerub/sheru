@@ -3,7 +3,7 @@
   {% csrf_token %}
 
   <div class="modal-header">
-    <h5 class="modal-title text-dark">Create a new Container Template</h5>
+    <h5 class="modal-title text-dark">{% if containertemplate %}Edit {% else %}Create a new {% endif %}Container Template</h5>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
       <span aria-hidden="true">&times;</span>
     </button>
@@ -49,7 +49,7 @@
 
   <div class="modal-footer">
     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-    <button type="button" class="submit-btn btn btn-primary">Create</button>
+    <button type="button" class="submit-btn btn btn-primary">{% if containertemplate %}Update{% else %}Create{% endif %}</button>
   </div>
 
 </form>

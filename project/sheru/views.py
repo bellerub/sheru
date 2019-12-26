@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
-from .forms import DefaultContainerTemplateForm, ContainerTemplateForm, ContainerTemplateModalForm, ContainerTemplateUpdateForm, UserUpdateForm, CustomUserCreationForm
+from .forms import DefaultContainerTemplateForm, ContainerTemplateModalForm, UserUpdateForm, CustomUserCreationForm
 from .models import User, ContainerTemplate, UserDefaultTemplate
 from .docker_management import get_running_containers, kill_container, ContainerPermissionDenied
 import uuid
@@ -36,7 +36,7 @@ def home(request, pk=None):
 
 @method_decorator(login_required, name='dispatch')
 class ContainerCreateView(BSModalCreateView):
-    template_name = 'modalForms/create_container_template.html'
+    template_name = 'modalForms/modify_container_template.html'
     form_class = ContainerTemplateModalForm
     success_message = 'Success: Template was created.'
     #success_url = reverse_lazy('user_profile')
@@ -64,11 +64,12 @@ class ContainerCreateView(BSModalCreateView):
                 default_templ.save()
         return super(ContainerCreateView, self).form_valid(form)
 
+# TODO: user / superadmin only
 @method_decorator(login_required, name='dispatch')
 class ContainerUpdateView(BSModalUpdateView):
     model = ContainerTemplate
-    template_name = 'modalForms/edit_container_template.html'
-    form_class = ContainerTemplateUpdateForm
+    template_name = 'modalForms/modify_container_template.html'
+    form_class = ContainerTemplateModalForm
     success_message = 'Success: Container template was updated.'
 
     def get_success_url(self):

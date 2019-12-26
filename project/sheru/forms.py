@@ -25,28 +25,10 @@ class ContainerTemplateModalForm(BSModalForm):
             'working_dir': 'Working directory',
         }
 
-class ContainerTemplateUpdateForm(BSModalForm):
-    dns_server_1 = forms.GenericIPAddressField(required=False)
-    dns_server_2 = forms.GenericIPAddressField(required=False)
-
-    class Meta:
-        model = ContainerTemplate
-        fields = ('friendly_name','image','shell', 'dns_server_1', 'dns_server_2', 'dns_search_domain', 'network_disable', 'user_id', 'working_dir', 'mount_volume', 'mount_location', )
-        labels = {
-            'network_disable': 'Disable networking?',
-            'mount_volume': 'Mount user volume?',
-            'working_dir': 'Working directory',
-        }
-
 class UserUpdateForm(BSModalForm):
     class Meta:
         model = User
         fields = ('email', 'first_name', 'last_name',)
-
-class ContainerTemplateForm(forms.ModelForm):
-    class Meta:
-        model = ContainerTemplate
-        fields = ('image','shell',)
 
 class DefaultContainerTemplateForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):

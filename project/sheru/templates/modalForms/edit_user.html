@@ -9,7 +9,7 @@
     </button>
   </div>
 
-  <div class="modal-body text-dark">
+  <div class="modal-body text-dark{% if form.errors %} invalid{% endif %}">
       {{ form | crispy }}
   </div>
 
