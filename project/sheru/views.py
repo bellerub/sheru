@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
 from .forms import DefaultContainerTemplateForm, ContainerTemplateModalForm, UserUpdateForm, CustomUserCreationForm
 from .models import User, ContainerTemplate, UserDefaultTemplate
@@ -64,13 +65,15 @@ class ContainerCreateView(BSModalCreateView):
                 default_templ.save()
         return super(ContainerCreateView, self).form_valid(form)
 
-# TODO: user / superadmin only
 @method_decorator(login_required, name='dispatch')
-class ContainerUpdateView(BSModalUpdateView):
+class ContainerUpdateView(UserPassesTestMixin, BSModalUpdateView):
     model = ContainerTemplate
     template_name = 'modalForms/modify_container_template.html'
     form_class = ContainerTemplateModalForm
     success_message = 'Success: Container template was updated.'
+
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.pk == self.get_object().owner.pk
 
     def get_success_url(self):
         if self.request.user.pk == self.object.owner.id:
@@ -100,11 +103,14 @@ class UserDeleteView(BSModalDeleteView):
     success_url = reverse_lazy('admin')
 
 @method_decorator(login_required, name='dispatch')
-class UserUpdateView(BSModalUpdateView):
+class UserUpdateView(UserPassesTestMixin, BSModalUpdateView):
     model = User
     template_name = 'modalForms/edit_user.html'
     form_class = UserUpdateForm
     success_message = 'Success: User was updated.'
+
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.pk == self.get_object().pk
 
     def get_success_url(self):
         if self.request.user.pk == self.object.id:
