@@ -20,16 +20,17 @@ services:
     depends_on:
       - sheru-daphne
     ports:
-      - "80:80"
+      - "8080:80"
 
-  sheru:
-    image: soarinferret/sheru:latest
+  sheru-daphne:
+    build: .
     restart: always
     expose:
       - "8000"
     volumes:
       - staticfiles:/project/static
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./project/sheru/migrations:/project/sheru/migrations
     depends_on:
       - db
     environment: 
