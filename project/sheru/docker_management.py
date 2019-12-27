@@ -19,7 +19,7 @@ def create_container(client, user, uid, template=None):
         'tty': True,
         'detach': True,
         'remove': True,
-        'labels': {"sheru.id": str(uid), "sheru.user": str(user.pk)},
+        'labels': {"xyz.sheru.id": str(uid), "xyz.sheru.user": str(user.pk)},
         'working_dir': template.working_dir
     }
 
@@ -49,15 +49,15 @@ def get_running_containers(user_pk=None, client=None):
         client = docker.DockerClient(base_url='unix://var/run/docker.sock')
     # Get containers
     if user_pk == None:
-        containers = client.containers.list(filters={'status': 'running', 'label': "sheru.user"})
+        containers = client.containers.list(filters={'status': 'running', 'label': "xyz.sheru.user"})
     else:
-        containers = client.containers.list(filters={'status': 'running', 'label': "sheru.user="+str(user_pk)})
+        containers = client.containers.list(filters={'status': 'running', 'label': "xyz.sheru.user="+str(user_pk)})
     results = list()
     for c in containers:
         results.append(
             {
-                "user": User.objects.get(pk=c.attrs['Config']['Labels']['sheru.user']),
-                "session": str(c.attrs['Config']['Labels']['sheru.id']),
+                "user": User.objects.get(pk=c.attrs['Config']['Labels']['xyz.sheru.user']),
+                "session": str(c.attrs['Config']['Labels']['xyz.sheru.id']),
                 "image": c.attrs['Config']['Image'],
                 "id": c.id,
                 "created": c.attrs['Created']
@@ -71,7 +71,7 @@ def kill_container(container_id, client=None):
     
     # Get Container & make sure it has a session id
     container = client.containers.get(container_id)
-    if 'sheru.id' in container.attrs['Config']['Labels']:
+    if 'xyz.sheru.id' in container.attrs['Config']['Labels']:
         container.remove(force=True)
     else:
         raise ContainerPermissionDenied
@@ -90,19 +90,19 @@ def get_volumes(user_pk=None, default=False, client=None):
     
     # Get Volumes
     if user_pk == None and default == False:
-        vols = client.volumes.list(filters={'label': "sheru.user"})
+        vols = client.volumes.list(filters={'label': "xyz.sheru.user"})
     elif user_pk and default == False:
-        vols = client.volumes.list(filters={'label': "sheru.user="+str(user_pk)})
+        vols = client.volumes.list(filters={'label': "xyz.sheru.user="+str(user_pk)})
     elif user_pk == None and default:
-        vols = client.volumes.list(filters={'label': ["sheru.user", 'sheru.default']})
+        vols = client.volumes.list(filters={'label': ["xyz.sheru.user", 'xyz.sheru.default']})
     else:
-        vols = client.volumes.list(filters={'label': ["sheru.user="+str(user_pk), 'sheru.default']})
+        vols = client.volumes.list(filters={'label': ["xyz.sheru.user="+str(user_pk), 'xyz.sheru.default']})
     results = list()
     for v in vols:
-        is_default = True if 'sheru.default' in v.attrs['Labels'] else False
+        is_default = True if 'xyz.sheru.default' in v.attrs['Labels'] else False
         results.append(
             {
-                "user": User.objects.get(pk=v.attrs['Labels']['sheru.user']),
+                "user": User.objects.get(pk=v.attrs['Labels']['xyz.sheru.user']),
                 "name": v.attrs['Name'],
                 "created": v.attrs['CreatedAt'],
                 "default": is_default
@@ -119,8 +119,8 @@ def create_volume(user_pk, client=None):
         raise DefaultUserVolumeExists
 
     client.volumes.create(labels={
-        'sheru.user': str(user_pk),
-        'sheru.default': 'True'
+        'xyz.sheru.user': str(user_pk),
+        'xyz.sheru.default': 'True'
     })
     # consistent return
     return get_volumes(user_pk, True, client)
