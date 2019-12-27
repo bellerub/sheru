@@ -30,7 +30,7 @@ def home(request, pk=None):
     template_id = get_default.template.id
     if pk != None:
         try:
-            template_id=ContainerTemplate.objects.get(pk=pk).id
+            template_id=ContainerTemplate.objects.filter(owner=request.user).get(pk=pk).id
         except ContainerTemplate.DoesNotExist:
             return redirect('user_profile')
     return render(request, 'shell.html', {'uid': session_uid, 'ctid': template_id})
