@@ -22,7 +22,7 @@ COPY --from=builder /root/.local /root/.local
 ENV PYTHONUNBUFFERED 1
 
 # Tmp Env Vars for Django to run
-ENV DEBUG True
+ENV DEBUG False
 ENV DB_NAME 'postgre'
 ENV DB_USER 'postgre'
 ENV DB_PWD 'postgre'
