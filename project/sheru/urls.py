@@ -21,7 +21,7 @@ urlpatterns = [
     url(r'^default_template/update/(?P<pk>\d+)/$', views.update_default_template, name='update_default_template'),
 
     # Authentication
-    url(r'^login/$', auth_views.LoginView.as_view(), {'template_name': 'auth/login.html'}, name='login'),
+    url(r'^login/$', views.login, name='login'),
     path('logout', auth_views.LogoutView.as_view(next_page=reverse_lazy('home')), name='logout'),
 
     # Admin

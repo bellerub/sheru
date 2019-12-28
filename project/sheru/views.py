@@ -1,18 +1,32 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, resolve_url
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth import views as auth_views
+from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib import messages
 from django.utils.decorators import method_decorator
+from django.utils.http import is_safe_url
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.conf import settings
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
 from .forms import DefaultContainerTemplateForm, ContainerTemplateModalForm, UserUpdateForm, CustomUserCreationForm
 from .models import User, ContainerTemplate, UserDefaultTemplate
 from .docker_management import get_running_containers, kill_container, ContainerPermissionDenied
 import uuid
 
-# Create your views here.
+# redirect x-remote-user header auth users so they don't see the login page
+def login(request, template_name='auth/login.html', redirect_field_name=REDIRECT_FIELD_NAME):
+    print(request.user)
+    print(request.headers)
+    if hasattr(request, 'user') and request.user.is_authenticated:
+        redirect_to = request.POST.get(redirect_field_name, request.GET.get(redirect_field_name, ''))
+        if not is_safe_url(url=redirect_to, allowed_hosts=request.get_host()):
+            redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+        return HttpResponseRedirect(redirect_to)
+    return auth_views.LoginView.as_view(template_name = 'registration/login.html')(request, redirect_field_name = redirect_field_name)
+
 @login_required
 def home(request, pk=None):
     try:

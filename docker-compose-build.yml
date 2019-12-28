@@ -18,11 +18,11 @@ services:
       - staticfiles:/static:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - sheru-daphne
+      - sheru
     ports:
       - "8080:80"
 
-  sheru-daphne:
+  sheru:
     build: .
     restart: always
     expose:
@@ -38,7 +38,7 @@ services:
       DB_PWD: "${POSTGRES_PASSWORD}"
       DB_NAME: "${POSTGRES_DB}"
       DEBUG: "${DEBUG}"
-      HEADER_AUTH: "false"
+      HEADER_AUTH: "True"
 
 volumes:
   staticfiles:

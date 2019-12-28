@@ -56,7 +56,7 @@ All settings can be provided as environment variables:
 * `POSTGRES_DB`: The postgres DB to connect to
 * `POSTGRES_USER`: The postgres DB username
 * `POSTGRES_PASSWORD`: The postgres DB password
-* `HEADER_AUTH`: If set to 'True', the application will accept `REMOTE_USER` header from an upstream proxy server
+* `HEADER_AUTH`: If set to 'True', the application will accept `X-REMOTE-USER` header from an upstream proxy server
 * `DEBUG`: If set to 'True', the application will produce debug output
 
 ## Credits

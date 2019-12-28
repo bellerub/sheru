@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.RemoteUserMiddleware',
+    'sheru.middleware.WebAuthHeaderMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -123,7 +123,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # if header auth is enabled, add remoteuser backend
 if os.environ['HEADER_AUTH'] == 'True':
     AUTHENTICATION_BACKENDS = (
-        'django.contrib.auth.backends.ModelBackend',
         'django.contrib.auth.backends.RemoteUserBackend',
     )
 

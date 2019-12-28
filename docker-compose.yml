@@ -18,7 +18,7 @@ services:
       - staticfiles:/static:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - sheru-daphne
+      - sheru
     ports:
       - "80:80"
 
