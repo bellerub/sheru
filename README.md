@@ -11,8 +11,8 @@ Essentially, Sheru spins up a new container for every user who connects, and del
 What does this mean?
 
 * There are bugs. Probably lots of them.
-  * My day job is Systems / Network administration, not development. I know the code looks gross
-* Security flaws are probably guaranteed.
+  * Forked from SoarinFerret who says: "My day job is Systems / Network administration, not development. I know the code looks gross
+* Security flaws are probably guaranteed."
 * Feature incomplete
   * I have the most basic functionality I was looking for in my head, but more will likely come.
 * This project is not geared towards less tech-savvy users - knowledge of docker will be useful when troubleshooting.
