@@ -38,7 +38,7 @@ git clone https://github.com/bellerub/sheru.git
 cd sheru
 
 # Create .env file
-nano .env
+sudo touch .env
 
 # Start services
 docker-compose up -d
