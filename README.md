@@ -34,7 +34,7 @@ Here are the basic install steps:
 
 ```bash
 # Clone Repo
-git clone https://github.com/SoarinFerret/sheru.git
+git clone https://github.com/bellerub/sheru.git
 cd sheru
 
 # Create .env file
